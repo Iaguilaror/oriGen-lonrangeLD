@@ -18,6 +18,7 @@ process select_snps {
     """
     zgrep -e ${params.snp1} -e ${params.snp2} $alltsv_channel > tmp.tsv
     Rscript --vanilla $selectsnp_script_channel tmp.tsv ${params.snp1} ${params.snp2}
+    rm tmp.tsv
     """
 
 }

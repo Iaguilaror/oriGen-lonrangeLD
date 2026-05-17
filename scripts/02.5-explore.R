@@ -1,12 +1,12 @@
 # load pkgs
-pacman::p_load( "tidyr", "dplyr", "ggplot2", "vroom" )
+pacman::p_load( "tidyr", "dplyr", "ggplot2", "vroom", "stringr", "data.table" )
 
 # load args# Read args from command line
 args = commandArgs( trailingOnly = TRUE )
 
 ## Uncomment For debugging only
 ## Comment for production mode only
-# args[1] <- "chr22_random10000_clean_matrix.ld.tsv.gz"
+# args[1] <- "chr21and22_random10000_clean_matrix.ld.tsv.gz"
 
 # put a name to args
 tsv_file <- args[1]
@@ -45,7 +45,7 @@ n_histo.p <- ggplot( data = allregs.df,
 
 # lets plot the distribution of R2
 r2.p <- ggplot( data = ld.df,
-        mapping = aes( x = R2 ) ) +
+                mapping = aes( x = R2 ) ) +
   geom_histogram( binwidth = 0.01 ) +
   scale_x_continuous( breaks = seq( from = 0, to = 1, by = 0.05 ) ) +
   labs( title = "Distribution of R2",
@@ -60,3 +60,36 @@ ggsave( plot = n_histo.p, filename = "n_histo.png" ,
 
 ggsave( plot = r2.p, filename = "r2.png" ,
         width = 14, height = 14 )
+
+# count interchrom links
+cleaned_ld.df <- ld.df %>%
+  select(-R2)
+
+# 1. Convert to data.table
+setDT(cleaned_ld.df)
+
+# 2. Drop R2 and strip everything starting at the FIRST underscore
+cleaned_ld.df[, SNP_A := sub("_.*", "", SNP_A)]
+cleaned_ld.df[, SNP_B := sub("_.*", "", SNP_B)]
+
+str( cleaned_ld.df )
+
+# count intra chr hits
+tagged.df <- cleaned_ld.df[, .N, by = .(same = SNP_A == SNP_B)] %>% 
+  as_tibble( ) %>% 
+  mutate( same = ifelse( test = same == T,
+                         yes = "Same Chromosome",
+                         no = "Different Chromosome" ) )
+
+# plot
+inter.p <- ggplot( data = tagged.df,
+                   mapping = aes( x = same,
+                                  y = N ) ) +
+  geom_col( ) +
+  labs( x = "",
+        y = "Nunmber of Links",
+        caption = "We should see some Diff. Chromosome links..." ) +
+  theme_classic( base_size = 10 )
+
+ggsave( plot = inter.p, filename = "inter.png" ,
+        width = 7, height = 7 )

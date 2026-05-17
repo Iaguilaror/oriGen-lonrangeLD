@@ -16,7 +16,7 @@ process allld_qc {
 
     script:
     """
-    ls > tmp
+    Rscript --vanilla $allqc_script_channel $alltsv_channel
     """
 
 }

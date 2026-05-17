@@ -49,6 +49,7 @@ r2.p <- ggplot( data = ld.df,
   geom_histogram( binwidth = 0.01 ) +
   scale_x_continuous( breaks = seq( from = 0, to = 1, by = 0.05 ) ) +
   labs( title = "Distribution of R2",
+        subtitle = paste( "total r2 pairs:", nrow( ld.df ) ),
         caption = "this helps us to decide a R2 cutoff to reduce file size imprint" ) +
   theme_classic( base_size = 20 ) +
   theme( axis.text.x = element_text( angle = 90, hjust = 0.5, vjust = 0.5 ) )

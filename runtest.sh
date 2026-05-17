@@ -1,6 +1,6 @@
 #!/bin/bash
 
-input_vcf="test/data/chr22_random10000.vcf.gz"
+input_vcf="test/data/chr21and22_random10000.vcf.gz"
 output_directory="test/results"
 res_config="configfiles/low-res-machine.config"
 

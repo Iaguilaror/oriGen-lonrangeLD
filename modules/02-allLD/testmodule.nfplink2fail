@@ -1,0 +1,48 @@
+/* Inititate DSL2 */
+nextflow.enable.dsl=2
+
+/* load functions for testing env */
+// NONE
+
+/* define the fullpath for the final location of the outs */
+params.intermediates_dir = params.results_dir = "test/results"
+
+/* load workflows for testing env */
+include { ALLLD }    from './main.nf'
+
+/* declare input channel for testing */
+    Channel
+        .fromPath( "test/data/*.pgen" )
+        .set { pgen_channel }
+
+/* declare input channel for testing */
+    Channel
+        .fromPath( "test/data/*.pvar" )
+        .set { pvar_file_channel }
+
+/* declare input channel for testing */
+    Channel
+        .fromPath( "test/data/*.psam" )
+        .set { psam_channel }
+
+// New: Parse the pvar file to extract every individual Variant ID string
+pvar_file_channel
+    .splitText() { line ->
+        // Skip comment lines/headers in the pvar file
+        if ( line.startsWith('#') ) return null
+        
+        // Split by tabs and grab the 3rd column (Variant ID)
+        def parts = line.split('\t')
+        return parts.length >= 3 ? parts[2].trim() : null
+    }
+    // Clean up any empty/null values that came from the header filter
+    .filter { it != null }
+    //.view( )
+    .set { variant_id_channel }
+
+/* declare scripts channel for testing */
+// NONE
+
+workflow {
+  ALLLD( pgen_channel, pvar_file_channel, psam_channel, variant_id_channel )
+}

@@ -113,14 +113,16 @@ params.intermediates_dir =  "${params.output_dir}/${params.pipeline_name}-interm
 
 /* load workflows */
 
-include { VCF2PLINK }  from  './modules/01-filter-plink1'
-include { ALLLD }      from  './modules/02-allLD'
-include { ALLLD_QC }   from  './modules/02.5-explore-allLD'
+include { VCF2PLINK }     from  './modules/01-filter-plink1'
+include { ALLLD }         from  './modules/02-allLD'
+include { ALLLD_QC }      from  './modules/02.5-explore-allLD'
+include { SELECT_SNPS }   from  './modules/03-select-snps'
 
 
 /* load scripts to send to workdirs */
 /* declare scripts channel from modules */
 allqc_script_channel = Channel.fromPath( "scripts/02.5-explore.R" )
+selectsnp_script_channel = Channel.fromPath( "scripts/03-select.R" )
 
 workflow mainflow {
 
@@ -158,6 +160,8 @@ workflow mainflow {
       .set { alltsv_channel }
 
     ALLLD_QC( alltsv_channel, allqc_script_channel )
+
+    SELECT_SNPS( alltsv_channel, selectsnp_script_channel )
 
 }
 

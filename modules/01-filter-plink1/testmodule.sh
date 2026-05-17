@@ -15,5 +15,4 @@ nextflow run testmodule.nf \
     --input_vcf "test/data/chr22_random10000.vcf.gz" \
     --maf "0.05" \
     --geno "0.02" \
-    --plink_thr "4" \
 && echo "[>>>] Module Test Successful"

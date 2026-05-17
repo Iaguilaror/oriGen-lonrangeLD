@@ -10,6 +10,7 @@ echo -e "======\n Testing NF execution \n======" \
     --input_vcf "$input_vcf" \
     --maf "0.05" \
     --geno "0.02" \
+    --ld_r2 0 \
     --ld_thr "32" \
 	--output_dir $output_directory \
 	-c $res_config \

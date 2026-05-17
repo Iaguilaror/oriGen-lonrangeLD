@@ -25,7 +25,7 @@ process allld {
           --r2 \
           --ld-window 999999999 \
           --ld-window-kb 999999999 \
-          --ld-window-r2 0 \
+          --ld-window-r2 ${params.ld_r2} \
           --threads ${params.ld_thr} \
           --out temp_raw
 

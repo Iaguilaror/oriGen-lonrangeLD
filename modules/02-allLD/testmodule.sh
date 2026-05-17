@@ -13,4 +13,5 @@ mkdir -p test/results
 # run nf script
 nextflow run testmodule.nf \
     --ld_thr 32 \
+    --ld_r2 0 \
 && echo "[>>>] Module Test Successful"

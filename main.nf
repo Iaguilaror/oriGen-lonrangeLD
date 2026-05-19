@@ -123,6 +123,7 @@ include { SELECT_SNPS }   from  './modules/03-select-snps'
 /* declare scripts channel from modules */
 allqc_script_channel = Channel.fromPath( "scripts/02.5-explore.R" )
 selectsnp_script_channel = Channel.fromPath( "scripts/03-select.R" )
+awk_script_channel = Channel.fromPath( "scripts/02.awk-filter.sh" )
 
 workflow mainflow {
 
@@ -153,7 +154,7 @@ workflow mainflow {
 		  .filter { file(it).name.endsWith('.fam') }
       .set { fam_channel }
 
-    all_ld = ALLLD( bed_channel, bim_file_channel, fam_channel ) | flatten
+    all_ld = ALLLD( bed_channel, bim_file_channel, fam_channel, awk_script_channel ) | flatten
 
     all_ld
       .filter { file(it).name.endsWith('.tsv.gz') }

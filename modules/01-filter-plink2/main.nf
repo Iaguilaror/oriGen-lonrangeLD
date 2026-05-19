@@ -19,10 +19,15 @@ process vcf2plink {
     plink2 --vcf ${vcf} \
            --maf ${params.maf} \
            --geno ${params.geno} \
-           --set-all-var-ids '@_#_\$r_\$a' \
            --make-pgen \
            --threads ${params.plink_thr} \
            --out ${vcf.simpleName}.filtered
+
+    # 2. Use awk to replace missing IDs with an incrementing number
+    awk -v OFS="\t" '/^#/ {print; next} {\$3 = NR; \$6 = "."; print}' \
+    ${vcf.simpleName}.filtered.pvar > ${vcf.simpleName}.filtered.pvar.tmp
+
+    mv ${vcf.simpleName}.filtered.pvar.tmp ${vcf.simpleName}.filtered.pvar
     """
 
 }

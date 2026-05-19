@@ -26,9 +26,8 @@ include { ALLLD }    from './main.nf'
         .set { fam_channel }
 
 /* declare scripts channel for testing */
-// NONE
+awk_script_channel = Channel.fromPath( "scripts/02.awk-filter.sh" )
 
 workflow {
-  ALLLD( bed_channel, bim_file_channel, fam_channel )
-//   ALLLD( bed_channel, bim_file_channel, fam_channel )
+  ALLLD( bed_channel, bim_file_channel, fam_channel, awk_script_channel )
 }

@@ -11,6 +11,7 @@ process allld {
       path bed
       path bim
       path fam
+      path script
 
     output:
       path "*", emit: results_allld
@@ -22,23 +23,17 @@ process allld {
     plink --bed ${bed} \
           --bim ${bim} \
           --fam ${fam} \
-          --r2 inter-chr \
+          --r2 inter-chr gz yes-really \
           --ld-window-r2 ${params.ld_r2} \
           --threads ${params.ld_thr} \
           --out temp_raw
 
     # 2. Extract only columns 3 (SNP_A), 6 (SNP_B), and 7 (R2)
-    export LC_ALL=C
-    cat temp_raw.ld \
-    | tr -s " " \
-    | cut -d" " -f4,7,8 \
-    > ${bed.simpleName}_clean_matrix.ld.tsv
+    bash $script temp_raw.ld ${bed.simpleName}_clean_matrix.ld.tsv.gz ${params.ld_thr}
 
     # 3. Clean up the temporary heavy files instantly to save disk space
-    rm -f temp_raw.ld temp_raw.nosex
+    rm -f temp_raw.ld.gz temp_raw.nosex
 
-    # compress
-    bgzip --threads ${params.ld_thr} ${bed.simpleName}_clean_matrix.ld.tsv
     """
 
 }
@@ -50,10 +45,11 @@ workflow ALLLD {
     bed_channel
     bim_file_channel
     fam_channel
+    awk_script_channel
 
  main:
 
-    allld( bed_channel, bim_file_channel, fam_channel )
+    allld( bed_channel, bim_file_channel, fam_channel, awk_script_channel )
 
   emit:
     results = allld.out.results_allld

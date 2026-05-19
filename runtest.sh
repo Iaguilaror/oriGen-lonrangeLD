@@ -10,7 +10,7 @@ echo -e "======\n Testing NF execution \n======" \
     --input_vcf "$input_vcf" \
     --maf "0.05" \
     --geno "0.02" \
-    --ld_r2 0.02 \
+    --ld_r2 0.03 \
     --ld_thr "32" \
     --snp1 21_5231730_C_G \
     --snp2 22_50773552_A_G \

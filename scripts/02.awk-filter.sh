@@ -9,7 +9,7 @@ ofile="$2"
 nthreads="$3"
 
 zcat $ifile \
-| awk -v OFS="\t" 'BEGIN {print "A", "B", "r2"} 
+| awk -v OFS="\t" 'BEGIN {print "SNP_A", "SNP_B", "R2"} 
                  NR > 1 {printf "%s\t%s\t%.2f\n", $3, $6, $7}' \
 | bgzip --threads $nthreads \
 > $ofile

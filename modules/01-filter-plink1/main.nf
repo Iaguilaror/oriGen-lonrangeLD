@@ -19,9 +19,14 @@ process vcf2plink {
     plink --vcf ${vcf} \
           --maf ${params.maf} \
           --geno ${params.geno} \
-          --set-missing-var-ids @_\\#_\\\$1_\\\$2 \
           --make-bed \
           --out ${vcf.simpleName}.filtered
+
+    # 2. Use awk to replace missing IDs with an incrementing number
+    awk -vOFS="\t" '{ \$2 = NR } {print}' \
+    ${vcf.simpleName}.filtered.bim > ${vcf.simpleName}.filtered.bim.tmp
+
+    mv ${vcf.simpleName}.filtered.bim.tmp ${vcf.simpleName}.filtered.bim
     """
 
 }

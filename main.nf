@@ -159,9 +159,9 @@ workflow mainflow {
       .filter { file(it).name.endsWith('.tsv.gz') }
       .set { alltsv_channel }
 
-    ALLLD_QC( alltsv_channel, allqc_script_channel )
+  //  ALLLD_QC( alltsv_channel, allqc_script_channel )
 
-    SELECT_SNPS( alltsv_channel, selectsnp_script_channel )
+  //  SELECT_SNPS( alltsv_channel, selectsnp_script_channel )
 
 }
 

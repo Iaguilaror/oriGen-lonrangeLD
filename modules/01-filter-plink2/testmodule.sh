@@ -12,7 +12,7 @@ mkdir -p test/results
 
 # run nf script
 nextflow run testmodule.nf \
-    --input_vcf "test/data/chr22_random10000.vcf.gz" \
+    --input_vcf "test/data/chr21and22_random10000.vcf.gz" \
     --maf "0.05" \
     --geno "0.02" \
     --plink_thr "4" \

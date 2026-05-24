@@ -14,7 +14,7 @@ process vcf2plink {
         path "*", emit: results_vcf2plink
 
     script:
-    """
+    """s
     # Stream VCF directly into a filtered PLINK 1.9 binary structure (BED/BIM/FAM)
     plink --vcf ${vcf} \
           --maf ${params.maf} \

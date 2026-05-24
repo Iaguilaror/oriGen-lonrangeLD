@@ -26,8 +26,8 @@ include { ALLLD }    from './main.nf'
         .set { psam_channel }
 
 /* declare scripts channel for testing */
-// awk_script_channel = Channel.fromPath( "scripts/02.awk-filter.sh" )
+mtx_script_channel = Channel.fromPath( "scripts/02-allLD-p2.R" )
 
 workflow {
-  ALLLD( pgen_channel, pvar_file_channel, psam_channel )
+  ALLLD( pgen_channel, pvar_file_channel, psam_channel, mtx_script_channel )
 }
